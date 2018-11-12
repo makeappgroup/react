@@ -1,0 +1,126 @@
+import React from 'react';
+import {Text, View} from 'react-native';
+import {Button, StyleSheet, WebView, Dimensions} from 'react-native';
+
+import {
+    createBottomTabNavigator,
+    createStackNavigator,
+} from 'react-navigation';
+
+const {width, height} = Dimensions.get('window');
+
+function setNav(title) {
+    return {
+        title: title,
+        headerStyle: {
+            backgroundColor: '#f4511e',
+            paddingTop: 0,
+            height: 40
+        },
+        headerTintColor: '#fff',
+        headerTitleStyle: {
+            fontWeight: 'normal',
+            fontSize: 15
+        }
+    };
+}
+
+class DetailsScreen extends React.Component {
+    static navigationOptions = setNav("详情");
+    render() {
+        return (
+            <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                <Text>Details!</Text>
+            </View>
+        );
+    }
+}
+
+class HomeScreen extends React.Component {
+    static navigationOptions = setNav("百度");
+    static flagSet = 0;
+    render() {
+        return (
+            <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                {/* other code from before here
+                <Button
+                    title="Go to Details"
+                    onPress={() => this.props.navigation.navigate('Details')}
+                />
+                 */}
+                <WebView
+                    style={{width: width, height: height - 20, backgroundColor: 'gray'}}
+                    source={{uri: "http://www.baidu.com", method: 'GET'}}
+                    javaScriptEnabled={true}
+                    domStorageEnabled={true}
+                    scalesPageToFit={false}
+                    onLoadStart={()=>{
+                            if(HomeScreen.flagSet === 0){
+
+                            }else{
+                                HomeScreen.flagSet = 1;
+                            }
+                    }}
+                />
+            </View>
+        );
+    }
+}
+
+class SettingsScreen extends React.Component {
+    static navigationOptions = setNav("丁丁支付");
+
+    render() {
+        return (
+            <View style={styles.container}>
+                <WebView
+                    style={{width: width, height: height - 20, backgroundColor: 'gray'}}
+                    source={{uri: "http://www.dingdingzhifu.com", method: 'GET'}}
+                    automaticallyAdjustContentInsets={true}
+                    javaScriptEnabled={true}
+                    domStorageEnabled={true}
+                    scalesPageToFit={false}
+                />
+            </View>
+        );
+    }
+}
+
+const HomeStack = createStackNavigator({
+    Home: HomeScreen,
+    Details: DetailsScreen,
+});
+
+const SettingsStack = createStackNavigator({
+    Settings: SettingsScreen,
+    Details: DetailsScreen,
+});
+
+export default createBottomTabNavigator(
+    {
+        "百度": HomeStack,
+        "丁丁支付": SettingsStack,
+    },
+    {
+        /* Other configuration remains unchanged */
+    }
+);
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#F5FCFF',
+    },
+    welcome: {
+        fontSize: 20,
+        textAlign: 'center',
+        margin: 10,
+    },
+    instructions: {
+        textAlign: 'center',
+        color: '#333333',
+        marginBottom: 5,
+    },
+});
